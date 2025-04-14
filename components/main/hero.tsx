@@ -1,6 +1,6 @@
 // Author: //sathwikreddychelemela
 import { motion } from "framer-motion";
-import { styles } from "@/app/styles";
+import { styles } from "@/styles";
 import ComputersCanvas from "@/components/canvas/computers";
 import { HeroContent } from "@/components/sub/hero-content";
 import { Suspense, useEffect, useRef } from "react";
