@@ -21,7 +21,7 @@ for key in os.environ:
         print(f"{key}: {os.environ[key]}")
 
 # Check for required environment variables
-required_env_vars = ["GROQ2_API_KEY_GROQ_API_KEY"]
+required_env_vars = ["GROQ_API_KEY"]
 missing_vars = [var for var in required_env_vars if not os.getenv(var)]
 if missing_vars:
     print(f"Missing environment variables: {missing_vars}")
@@ -37,7 +37,7 @@ llm = None
 def initialize_llm():
     global llm
     try:
-        llm = ChatGroq(groq_api_key=os.getenv("GROQ2_API_KEY_GROQ_API_KEY"), model_name="Llama3-8b-8192")
+        llm = ChatGroq(groq_api_key=os.getenv("GROQ_API_KEY"), model_name="Llama3-8b-8192")
         print("LLM initialized successfully")
     except Exception as e:
         print(f"Error initializing LLM: {str(e)}")
