@@ -11,6 +11,14 @@ const VideoBackground = () => {
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.playbackRate = 0.6;
+      // Add this to handle mobile autoplay
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          // Autoplay was prevented, show a fallback
+          videoRef.current?.load();
+        });
+      }
     }
   }, []);
 
@@ -23,8 +31,10 @@ const VideoBackground = () => {
       playsInline
       preload="auto"
       className="rotate-180 absolute top-[-420px] left-0 w-full h-full object-cover -z-20"
+      poster={process.env.NEXT_PUBLIC_VIDEO_POSTER || "/videos/earth-poster.jpg"}
     >
-      <source src="/videos/earth.webm" type="video/webm" />
+      <source src={process.env.NEXT_PUBLIC_VIDEO_WEBM || "/videos/earth.webm"} type="video/webm" />
+      <source src={process.env.NEXT_PUBLIC_VIDEO_MP4 || "/videos/earth.mp4"} type="video/mp4" />
     </video>
   );
 };
