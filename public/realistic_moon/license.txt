@@ -1,0 +1,8 @@
+Model Information:
+* title:	Realistic Moon
+* source:	https://sketchfab.com/3d-models/realistic-moon-92485002678c4447aab7e22a6c10298c
+* author:	MuseModels (https://sketchfab.com/MuseModels)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

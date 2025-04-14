@@ -1,0 +1,103 @@
+{
+  "name": "space-portfolio",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "author": {
+    "name": "Sathwik",
+    "email": "sathwik@gmail.com",
+    "url": "https://github.com/sathwik"
+  },
+  "description": "Welcome to my full stack Next.js 14 space portfolio.",
+  "keywords": [
+    "reactjs",
+    "nextjs",
+    "vercel",
+    "react",
+    "space-portfolio",
+    "portfolio",
+    "react-icons",
+    "cn",
+    "clsx",
+    "3d-portfolio",
+    "3d-website",
+    "sonner",
+    "framer-motion",
+    "motion",
+    "animation",
+    "heroicons",
+    "next-themes",
+    "postcss",
+    "prettier",
+    "react-dom",
+    "tailwindcss",
+    "tailwindcss-animate",
+    "ui/ux",
+    "js",
+    "javascript",
+    "typescript",
+    "eslint",
+    "html",
+    "css"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sathwik/space-portfolio.git"
+  },
+  "homepage": "https://github.com/sathwik/space-portfolio#readme",
+  "bugs": {
+    "url": "https://github.com/sathwik/space-portfolio/issues"
+  },
+  "funding": [
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/sathwik"
+    },
+    {
+      "type": "Buy me a coffee",
+      "url": "https://www.buymeacoffee.com/sathwik"
+    }
+  ],
+  "dependencies": {
+    "@heroicons/react": "^2.1.1",
+    "@radix-ui/react-slot": "^1.1.2",
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.18.0",
+    "@types/node": "^20.11.19",
+    "@types/react": "^18.2.57",
+    "@types/react-dom": "^18.2.19",
+    "@types/three": "^0.175.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.0",
+    "framer-motion": "^11.0.5",
+    "lucide-react": "^0.483.0",
+    "maath": "^0.10.8",
+    "next": "14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^5.0.1",
+    "react-intersection-observer": "^9.5.3",
+    "react-responsive": "^10.0.1",
+    "react-tilt": "^1.0.2",
+    "react-tsparticles": "^2.12.2",
+    "styled-components": "^6.1.15",
+    "tailwind-merge": "^2.2.0",
+    "three": "^0.161.0",
+    "tsparticles": "^3.8.1",
+    "typescript": "^5.3.3"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.17",
+    "eslint": "^8.56.0",
+    "eslint-config-next": "14.1.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1"
+  },
+  "type": "module"
+}
