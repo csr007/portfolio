@@ -37,7 +37,7 @@ llm = None
 def initialize_llm():
     global llm
     try:
-        llm = ChatGroq(groq_api_key="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", model_name="Llama3-8b-8192")
+        llm = ChatGroq(groq_api_key=os.getenv("GROQ_API_KEY"), model_name="Llama3-8b-8192")
         print("LLM initialized successfully")
     except Exception as e:
         print(f"Error initializing LLM: {str(e)}")
