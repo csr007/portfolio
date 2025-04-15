@@ -74,7 +74,7 @@ const Chatbot: React.FC = () => {
     (document.getElementById("user-input") as HTMLInputElement).value = "";
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-backend-cf0s.onrender.com';
       const response = await fetch(`${apiUrl}/chat`, {
         method: "POST",
         headers: {
