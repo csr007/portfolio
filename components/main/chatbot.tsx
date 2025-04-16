@@ -12,12 +12,15 @@ interface TypingMessageProps {
 const TypingMessage: React.FC<TypingMessageProps> = ({ text, sender }) => {
   const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
+  const messageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (currentIndex < text.length) {
       const timer = setTimeout(() => {
         setDisplayedText(prev => prev + text[currentIndex]);
         setCurrentIndex(prev => prev + 1);
+        // Smooth scroll to the message as it's being typed
+        messageRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
       }, 30);
 
       return () => clearTimeout(timer);
@@ -26,6 +29,7 @@ const TypingMessage: React.FC<TypingMessageProps> = ({ text, sender }) => {
 
   return (
     <motion.div 
+      ref={messageRef}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       className={`flex ${sender === 'bot' ? 'justify-start' : 'justify-end'} mb-4`}
@@ -53,26 +57,37 @@ const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<Array<{ text: string; sender: 'user' | 'bot' }>>([]);
   const [isConnecting, setIsConnecting] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  };
+
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
   };
 
   const sendMessage = async () => {
-    const userInput = (document.getElementById("user-input") as HTMLInputElement).value;
-    if (!userInput) return;
+    const userInput = inputRef.current?.value;
+    if (!userInput?.trim()) return;
 
     // Add user message immediately
     setMessages(prev => [...prev, { text: userInput, sender: 'user' }]);
-    (document.getElementById("user-input") as HTMLInputElement).value = "";
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
 
     // Show connecting message
     setIsConnecting(true);
@@ -188,6 +203,7 @@ const Chatbot: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
+              ref={messagesContainerRef}
               className="p-4 h-[calc(100%-120px)] overflow-y-auto scrollbar-thin scrollbar-thumb-purple-500/20 scrollbar-track-transparent"
             >
               {messages.map((message, index) => (
@@ -208,10 +224,11 @@ const Chatbot: React.FC = () => {
             >
               <div className="flex gap-2">
                 <motion.input
+                  ref={inputRef}
                   whileFocus={{ scale: 1.02 }}
                   type="text"
-                  id="user-input"
                   placeholder="Type your message..."
+                  onKeyPress={handleKeyPress}
                   className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-purple-500/50"
                 />
                 <motion.button
