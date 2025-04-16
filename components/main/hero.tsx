@@ -1,4 +1,3 @@
-// Author: //sathwikreddychelemela
 import { motion } from "framer-motion";
 import { styles } from "@/styles";
 import ComputersCanvas from "@/components/canvas/computers";
@@ -72,12 +71,11 @@ const VideoBackground = () => {
         height: '100%',
         objectFit: 'cover',
         position: 'absolute',
-        top: '-420px',
+        top: isMobile ? '-480px' : '-420px', // changed here
         left: 0,
         zIndex: -20,
         ...(isMobile && {
-          top: '-320px',
-          height: '120%'
+          height: '130%' // changed here
         })
       }}
     >
