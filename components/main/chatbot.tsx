@@ -12,15 +12,12 @@ interface TypingMessageProps {
 const TypingMessage: React.FC<TypingMessageProps> = ({ text, sender }) => {
   const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
-  const messageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (currentIndex < text.length) {
       const timer = setTimeout(() => {
         setDisplayedText(prev => prev + text[currentIndex]);
         setCurrentIndex(prev => prev + 1);
-        // Smooth scroll to the message as it's being typed
-        messageRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
       }, 30);
 
       return () => clearTimeout(timer);
@@ -29,7 +26,6 @@ const TypingMessage: React.FC<TypingMessageProps> = ({ text, sender }) => {
 
   return (
     <motion.div 
-      ref={messageRef}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       className={`flex ${sender === 'bot' ? 'justify-start' : 'justify-end'} mb-4`}
@@ -55,28 +51,25 @@ const TypingMessage: React.FC<TypingMessageProps> = ({ text, sender }) => {
 const Chatbot: React.FC = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState<Array<{ text: string; sender: 'user' | 'bot' }>>([]);
-  const [isConnecting, setIsConnecting] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
-  };
-
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
   };
 
   const sendMessage = async () => {
@@ -88,10 +81,6 @@ const Chatbot: React.FC = () => {
     if (inputRef.current) {
       inputRef.current.value = "";
     }
-
-    // Show connecting message
-    setIsConnecting(true);
-    setMessages(prev => [...prev, { text: "Connecting to agent Sathwik, please wait...", sender: 'bot' }]);
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-backend-cf0s.onrender.com';
@@ -108,16 +97,10 @@ const Chatbot: React.FC = () => {
       }
 
       const data = await response.json();
-      // Remove the connecting message and add the actual response
-      setMessages(prev => prev.slice(0, -1));
       setMessages(prev => [...prev, { text: data.response, sender: 'bot' }]);
     } catch (error) {
       console.error("Fetch error:", error);
-      // Remove the connecting message and show error
-      setMessages(prev => prev.slice(0, -1));
       setMessages(prev => [...prev, { text: "Error: Unable to fetch response. Please try again.", sender: 'bot' }]);
-    } finally {
-      setIsConnecting(false);
     }
   };
 
@@ -203,7 +186,6 @@ const Chatbot: React.FC = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              ref={messagesContainerRef}
               className="p-4 h-[calc(100%-120px)] overflow-y-auto scrollbar-thin scrollbar-thumb-purple-500/20 scrollbar-track-transparent"
             >
               {messages.map((message, index) => (
@@ -224,11 +206,11 @@ const Chatbot: React.FC = () => {
             >
               <div className="flex gap-2">
                 <motion.input
-                  ref={inputRef}
                   whileFocus={{ scale: 1.02 }}
                   type="text"
-                  placeholder="Type your message..."
+                  ref={inputRef}
                   onKeyPress={handleKeyPress}
+                  placeholder="Type your message..."
                   className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-purple-500/50"
                 />
                 <motion.button
