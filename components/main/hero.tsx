@@ -3,13 +3,21 @@ import { motion } from "framer-motion";
 import { styles } from "@/styles";
 import ComputersCanvas from "@/components/canvas/computers";
 import { HeroContent } from "@/components/sub/hero-content";
-import { Suspense, useEffect, useRef } from "react";
-
+import { Suspense, useEffect, useRef, useState } from "react";
 
 const VideoBackground = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Check if device is mobile
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
     if (videoRef.current) {
       videoRef.current.playbackRate = 0.6;
       
@@ -18,7 +26,7 @@ const VideoBackground = () => {
         try {
           await videoRef.current?.play();
         } catch (error) {
-          // If autoplay fails, show poster image
+          console.log('Autoplay failed, showing poster image');
           if (videoRef.current) {
             videoRef.current.load();
           }
@@ -44,6 +52,7 @@ const VideoBackground = () => {
       return () => {
         document.removeEventListener('visibilitychange', handleVisibilityChange);
         document.removeEventListener('touchstart', handleTouchStart);
+        window.removeEventListener('resize', checkMobile);
       };
     }
   }, []);
@@ -56,7 +65,7 @@ const VideoBackground = () => {
       loop
       playsInline
       preload="auto"
-      className="rotate-180 absolute top-[-420px] left-0 w-full h-full object-cover -z-20"
+      className={`rotate-180 absolute top-[-420px] left-0 w-full h-full object-cover -z-20 ${isMobile ? 'mobile-video' : ''}`}
       poster={process.env.NEXT_PUBLIC_VIDEO_POSTER || "/videos/earth-poster.jpg"}
       style={{
         width: '100%',
@@ -66,10 +75,14 @@ const VideoBackground = () => {
         top: '-420px',
         left: 0,
         zIndex: -20,
+        ...(isMobile && {
+          top: '-320px',
+          height: '120%'
+        })
       }}
     >
-      <source src={process.env.NEXT_PUBLIC_VIDEO_WEBM || "/videos/earth.webm"} type="video/webm" />
       <source src={process.env.NEXT_PUBLIC_VIDEO_MP4 || "/videos/earth.mp4"} type="video/mp4" />
+      <source src={process.env.NEXT_PUBLIC_VIDEO_WEBM || "/videos/earth.webm"} type="video/webm" />
       Your browser does not support the video tag.
     </video>
   );
