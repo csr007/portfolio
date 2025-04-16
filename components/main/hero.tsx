@@ -5,6 +5,7 @@ import ComputersCanvas from "@/components/canvas/computers";
 import { HeroContent } from "@/components/sub/hero-content";
 import { Suspense, useEffect, useRef } from "react";
 
+
 const VideoBackground = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
