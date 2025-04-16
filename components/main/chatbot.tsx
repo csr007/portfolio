@@ -56,6 +56,7 @@ const TypingMessage: React.FC<TypingMessageProps> = ({ text, sender }) => {
 const Chatbot: React.FC = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState<Array<{ text: string; sender: 'user' | 'bot' }>>([]);
+  const [isFirstMessage, setIsFirstMessage] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -91,6 +92,12 @@ const Chatbot: React.FC = () => {
       inputRef.current.value = "";
     }
 
+    // Show loading message for first message
+    if (isFirstMessage) {
+      setMessages(prev => [...prev, { text: "Please wait, AI assistant is joining...", sender: 'bot' }]);
+      setIsFirstMessage(false);
+    }
+
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-backend-cf0s.onrender.com';
       const response = await fetch(`${apiUrl}/chat`, {
@@ -106,9 +113,17 @@ const Chatbot: React.FC = () => {
       }
 
       const data = await response.json();
+      // Remove loading message if it's the first message
+      if (isFirstMessage) {
+        setMessages(prev => prev.slice(0, -1));
+      }
       setMessages(prev => [...prev, { text: data.response, sender: 'bot' }]);
     } catch (error) {
       console.error("Fetch error:", error);
+      // Remove loading message if it's the first message
+      if (isFirstMessage) {
+        setMessages(prev => prev.slice(0, -1));
+      }
       setMessages(prev => [...prev, { text: "Error: Unable to fetch response. Please try again.", sender: 'bot' }]);
     }
   };
