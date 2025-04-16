@@ -92,10 +92,12 @@ const Chatbot: React.FC = () => {
       inputRef.current.value = "";
     }
 
-    // Show loading message for first message
+    // Show loading message for first message after 1 second delay
     if (isFirstMessage) {
-      setMessages(prev => [...prev, { text: "Please wait, AI Assistant is joining...", sender: 'bot' }]);
-      setIsFirstMessage(false);
+      setTimeout(() => {
+        setMessages(prev => [...prev, { text: "Please wait, AI Assistant is joining...", sender: 'bot' }]);
+        setIsFirstMessage(false);
+      }, 1000);
     }
 
     try {
