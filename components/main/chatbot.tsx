@@ -92,12 +92,13 @@ const Chatbot: React.FC = () => {
       inputRef.current.value = "";
     }
 
-    // Show loading message for first message after 1 second delay
+    // Show loading message for first message
     if (isFirstMessage) {
-      setTimeout(() => {
-        setMessages(prev => [...prev, { text: "Please wait, AI Assistant is joining...", sender: 'bot' }]);
-        setIsFirstMessage(false);
-      }, 1000);
+      setMessages(prev => [...prev, { text: "Please wait, AI Assistant is joining...", sender: 'bot' }]);
+      setIsFirstMessage(false);
+      
+      // Add 1 second delay before making the API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
     }
 
     try {
