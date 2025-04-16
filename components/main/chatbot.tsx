@@ -94,7 +94,7 @@ const Chatbot: React.FC = () => {
 
     // Show loading message for first message
     if (isFirstMessage) {
-      setMessages(prev => [...prev, { text: "Please wait, AI assistant is joining...", sender: 'bot' }]);
+      setMessages(prev => [...prev, { text: "Please wait, AI Assistant is joining...", sender: 'bot' }]);
       setIsFirstMessage(false);
     }
 
@@ -113,17 +113,10 @@ const Chatbot: React.FC = () => {
       }
 
       const data = await response.json();
-      // Remove loading message if it's the first message
-      if (isFirstMessage) {
-        setMessages(prev => prev.slice(0, -1));
-      }
+      // Add the actual response as a new message
       setMessages(prev => [...prev, { text: data.response, sender: 'bot' }]);
     } catch (error) {
       console.error("Fetch error:", error);
-      // Remove loading message if it's the first message
-      if (isFirstMessage) {
-        setMessages(prev => prev.slice(0, -1));
-      }
       setMessages(prev => [...prev, { text: "Error: Unable to fetch response. Please try again.", sender: 'bot' }]);
     }
   };
