@@ -12,12 +12,16 @@ interface TypingMessageProps {
 const TypingMessage: React.FC<TypingMessageProps> = ({ text, sender }) => {
   const [displayedText, setDisplayedText] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
+  const messageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (currentIndex < text.length) {
       const timer = setTimeout(() => {
         setDisplayedText(prev => prev + text[currentIndex]);
         setCurrentIndex(prev => prev + 1);
+        if (messageRef.current) {
+          messageRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
       }, 30);
 
       return () => clearTimeout(timer);
@@ -26,6 +30,7 @@ const TypingMessage: React.FC<TypingMessageProps> = ({ text, sender }) => {
 
   return (
     <motion.div 
+      ref={messageRef}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       className={`flex ${sender === 'bot' ? 'justify-start' : 'justify-end'} mb-4`}
@@ -57,7 +62,8 @@ const Chatbot: React.FC = () => {
 
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+      const container = messagesContainerRef.current;
+      container.scrollTop = container.scrollHeight;
     }
   };
 
