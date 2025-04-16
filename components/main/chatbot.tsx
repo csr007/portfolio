@@ -51,6 +51,7 @@ const TypingMessage: React.FC<TypingMessageProps> = ({ text, sender }) => {
 const Chatbot: React.FC = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [messages, setMessages] = useState<Array<{ text: string; sender: 'user' | 'bot' }>>([]);
+  const [isConnecting, setIsConnecting] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -73,6 +74,10 @@ const Chatbot: React.FC = () => {
     setMessages(prev => [...prev, { text: userInput, sender: 'user' }]);
     (document.getElementById("user-input") as HTMLInputElement).value = "";
 
+    // Show connecting message
+    setIsConnecting(true);
+    setMessages(prev => [...prev, { text: "Connecting to agent Sathwik, please wait...", sender: 'bot' }]);
+
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-backend-cf0s.onrender.com';
       const response = await fetch(`${apiUrl}/chat`, {
@@ -88,11 +93,16 @@ const Chatbot: React.FC = () => {
       }
 
       const data = await response.json();
-      // Add bot message with typing effect
+      // Remove the connecting message and add the actual response
+      setMessages(prev => prev.slice(0, -1));
       setMessages(prev => [...prev, { text: data.response, sender: 'bot' }]);
     } catch (error) {
       console.error("Fetch error:", error);
-      setMessages(prev => [...prev, { text: "Error: Unable to fetch response.", sender: 'bot' }]);
+      // Remove the connecting message and show error
+      setMessages(prev => prev.slice(0, -1));
+      setMessages(prev => [...prev, { text: "Error: Unable to fetch response. Please try again.", sender: 'bot' }]);
+    } finally {
+      setIsConnecting(false);
     }
   };
 
