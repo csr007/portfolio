@@ -13,7 +13,7 @@ const education = [
     description: [
       "Currently pursuing MS in Information Systems with a focus on AI and Machine Learning",
       "Key courses include Generative AI, Natural Language Processing, Machine Learning, Database Management, and Web Design",
-      "Maintaining a strong academic record with a GPA of 3.724",
+      "Maintaining a strong academic record with a GPA of 3.758",
     ],
     achievements: [
       "Active participation in AI and Machine Learning research projects",
