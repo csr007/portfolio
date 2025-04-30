@@ -307,6 +307,12 @@ export const PROJECTS = [
     tags: ["Apache Kafka", "Apache Spark", "Airflow", "Cassandra", "Docker"],
   },
   {
+    title: "Full-Stack Text-to-Image Diffusion App",
+    description: "A full-stack web application that generates images from text using Stable Diffusion. Built with CLIP tokenizer, VAE encoder/decoder, U-Net, and fine-tuned diffusion model. Integrated with LangChain, RAG pipeline, and deployed using Streamlit and Hugging Face Spaces.",
+    link: "https://github.com/SathwikReddyChelemela/Full-Stack-Text-to-Image-Diffusion-Model",
+    tags: ["Stable Diffusion", "LangChain", "VAE", "U-Net", "Generative AI", "Full-Stack AI", "Streamlit"],
+  },
+  {
     title: "Fine-Tuning LLMs for SQL Query Generation",
     description: "LoRA fine-tuning of DeepSeek and LLaMA models to generate SQL queries from natural language prompts.",
     link: "https://github.com/SathwikReddyChelemela/Fine-Tuning-LLMs-for-SQL-Query-Generation",
