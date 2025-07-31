@@ -9,23 +9,21 @@ const VideoBackground = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Check if device is mobile
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
 
     checkMobile();
-    window.addEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
 
     if (videoRef.current) {
       videoRef.current.playbackRate = 0.6;
 
-      // Improved mobile autoplay handling
       const playVideo = async () => {
         try {
           await videoRef.current?.play();
         } catch (error) {
-          console.log('Autoplay failed, showing poster image');
+          console.log("Autoplay failed, showing poster image");
           if (videoRef.current) {
             videoRef.current.load();
           }
@@ -33,7 +31,7 @@ const VideoBackground = () => {
       };
 
       const handleVisibilityChange = () => {
-        if (document.visibilityState === 'visible') {
+        if (document.visibilityState === "visible") {
           playVideo();
         }
       };
@@ -42,15 +40,15 @@ const VideoBackground = () => {
         playVideo();
       };
 
-      document.addEventListener('visibilitychange', handleVisibilityChange);
-      document.addEventListener('touchstart', handleTouchStart, { once: true });
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      document.addEventListener("touchstart", handleTouchStart, { once: true });
 
       playVideo();
 
       return () => {
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
-        document.removeEventListener('touchstart', handleTouchStart);
-        window.removeEventListener('resize', checkMobile);
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+        document.removeEventListener("touchstart", handleTouchStart);
+        window.removeEventListener("resize", checkMobile);
       };
     }
   }, []);
@@ -63,20 +61,19 @@ const VideoBackground = () => {
       loop
       playsInline
       preload="auto"
-      className={`rotate-180 absolute top-[-420px] left-0 w-full h-full object-cover -z-20 ${isMobile ? 'mobile-video' : ''}`}
+      className={`rotate-180 absolute top-[-420px] left-0 w-full h-full object-cover -z-20 ${isMobile ? "mobile-video" : ""}`}
       poster={process.env.NEXT_PUBLIC_VIDEO_POSTER || "/videos/earth-poster.jpg"}
       style={{
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        position: 'absolute',
-        top: isMobile ? '-480px' : '-420px',
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+        position: "absolute",
+        top: isMobile ? "-480px" : "-420px",
         left: 0,
         zIndex: -20,
         ...(isMobile && {
-          height: '130%' // preserve original mobile behavior
+          height: "130%",
         }),
-        ...(isMobile ? {} : { transform: 'scale(0.95)' }) // 🔥 only change for desktop
       }}
     >
       <source src={process.env.NEXT_PUBLIC_VIDEO_MP4 || "/videos/earth.mp4"} type="video/mp4" />
