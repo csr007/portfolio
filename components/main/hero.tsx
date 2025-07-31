@@ -14,14 +14,12 @@ const VideoBackground = () => {
       setIsMobile(window.innerWidth <= 768);
     };
 
-    
-    
     checkMobile();
     window.addEventListener('resize', checkMobile);
 
     if (videoRef.current) {
       videoRef.current.playbackRate = 0.6;
-      
+
       // Improved mobile autoplay handling
       const playVideo = async () => {
         try {
@@ -66,19 +64,17 @@ const VideoBackground = () => {
       loop
       playsInline
       preload="auto"
-      className={`rotate-180 absolute top-[-420px] left-0 w-full h-full object-cover -z-20 ${isMobile ? 'mobile-video' : ''}`}
+      className={`rotate-180 absolute left-0 w-full h-full object-cover -z-20 ${isMobile ? 'mobile-video' : ''}`}
       poster={process.env.NEXT_PUBLIC_VIDEO_POSTER || "/videos/earth-poster.jpg"}
       style={{
         width: '100%',
         height: '100%',
         objectFit: 'cover',
         position: 'absolute',
-        top: isMobile ? '-480px' : '-420px', // changed here
+        top: 0,
         left: 0,
         zIndex: -20,
-        ...(isMobile && {
-          height: '130%' // changed here
-        })
+        transform: isMobile ? 'scale(1.3)' : 'none'
       }}
     >
       <source src={process.env.NEXT_PUBLIC_VIDEO_MP4 || "/videos/earth.mp4"} type="video/mp4" />
@@ -91,7 +87,7 @@ const VideoBackground = () => {
 export const Hero = () => {
   return (
     <div className="relative flex flex-col h-full w-full">
-      <Suspense fallback={<div className="absolute top-[-420px] left-0 w-full h-full bg-black -z-20" />}>
+      <Suspense fallback={<div className="absolute inset-0 bg-black -z-20" />}>
         <VideoBackground />
       </Suspense>
       <HeroContent />
