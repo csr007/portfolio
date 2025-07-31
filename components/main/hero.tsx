@@ -9,6 +9,7 @@ const VideoBackground = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Check if device is mobile
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
@@ -19,6 +20,7 @@ const VideoBackground = () => {
     if (videoRef.current) {
       videoRef.current.playbackRate = 0.6;
 
+      // Improved mobile autoplay handling
       const playVideo = async () => {
         try {
           await videoRef.current?.play();
@@ -71,7 +73,10 @@ const VideoBackground = () => {
         top: isMobile ? '-480px' : '-420px',
         left: 0,
         zIndex: -20,
-        transform: isMobile ? 'scale(1.15)' : 'scale(0.95)' // 🔧 Slightly smaller video on desktop
+        ...(isMobile && {
+          height: '130%' // preserve original mobile behavior
+        }),
+        ...(isMobile ? {} : { transform: 'scale(0.95)' }) // 🔥 only change for desktop
       }}
     >
       <source src={process.env.NEXT_PUBLIC_VIDEO_MP4 || "/videos/earth.mp4"} type="video/mp4" />
