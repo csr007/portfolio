@@ -68,7 +68,7 @@ const VideoBackground = () => {
       poster={process.env.NEXT_PUBLIC_VIDEO_POSTER || "/videos/earth-poster.jpg"}
       style={{
         width: '100%',
-        height: '90%',
+        height: '100%',
         objectFit: 'cover',
         position: 'absolute',
         top: isMobile ? '-480px' : '-420px', // changed here
