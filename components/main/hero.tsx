@@ -24,9 +24,7 @@ const VideoBackground = () => {
           await videoRef.current?.play();
         } catch (error) {
           console.log('Autoplay failed, showing poster image');
-          if (videoRef.current) {
-            videoRef.current.load();
-          }
+          videoRef.current?.load();
         }
       };
 
@@ -36,9 +34,7 @@ const VideoBackground = () => {
         }
       };
 
-      const handleTouchStart = () => {
-        playVideo();
-      };
+      const handleTouchStart = () => playVideo();
 
       document.addEventListener('visibilitychange', handleVisibilityChange);
       document.addEventListener('touchstart', handleTouchStart, { once: true });
@@ -54,38 +50,43 @@ const VideoBackground = () => {
   }, []);
 
   return (
-    <video
-      ref={videoRef}
-      autoPlay
-      muted
-      loop
-      playsInline
-      preload="auto"
-      className={`rotate-180 absolute w-full h-full object-cover -z-20`}
-      poster={process.env.NEXT_PUBLIC_VIDEO_POSTER || "/videos/earth-poster.jpg"}
+    <div
+      className="absolute inset-0 overflow-hidden -z-20"
       style={{
-        width: '100%',
-        height: '100%',
-        objectFit: 'cover',
-        position: 'absolute',
-        top: isMobile ? '-520px' : '-420px', // 🔧 Adjusted offset for half-Earth visibility
-        left: 0,
-        zIndex: -20,
-        transform: isMobile ? 'scale(1.2)' : 'scale(1)', // 🔧 Smooth mobile scaling
-        backgroundColor: 'black'
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+        transform: 'translateY(-25%)', // shifts video upward to reveal half earth
+        height: '130vh', // gives breathing room on tall screens
       }}
     >
-      <source src={process.env.NEXT_PUBLIC_VIDEO_MP4 || "/videos/earth.mp4"} type="video/mp4" />
-      <source src={process.env.NEXT_PUBLIC_VIDEO_WEBM || "/videos/earth.webm"} type="video/webm" />
-      Your browser does not support the video tag.
-    </video>
+      <video
+        ref={videoRef}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        poster={process.env.NEXT_PUBLIC_VIDEO_POSTER || "/videos/earth-poster.jpg"}
+        className={`rotate-180 w-auto h-full object-contain`}
+        style={{
+          objectFit: 'contain',
+          height: isMobile ? '120vh' : '110vh',
+          backgroundColor: 'black',
+        }}
+      >
+        <source src={process.env.NEXT_PUBLIC_VIDEO_MP4 || "/videos/earth.mp4"} type="video/mp4" />
+        <source src={process.env.NEXT_PUBLIC_VIDEO_WEBM || "/videos/earth.webm"} type="video/webm" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
   );
 };
 
 export const Hero = () => {
   return (
     <div className="relative flex flex-col h-full w-full">
-      <Suspense fallback={<div className="absolute top-[-420px] left-0 w-full h-full bg-black -z-20" />}>
+      <Suspense fallback={<div className="absolute inset-0 bg-black -z-20" />}>
         <VideoBackground />
       </Suspense>
       <HeroContent />
