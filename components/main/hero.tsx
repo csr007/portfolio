@@ -61,18 +61,18 @@ const VideoBackground = () => {
       loop
       playsInline
       preload="auto"
-      className={`rotate-180 absolute left-0 top-0 w-full h-full -z-20`}
+      className={`rotate-180 absolute w-full h-full object-cover -z-20`}
       poster={process.env.NEXT_PUBLIC_VIDEO_POSTER || "/videos/earth-poster.jpg"}
       style={{
         width: '100%',
         height: '100%',
-        objectFit: 'contain', // <--- KEY CHANGE: preserve full video frame
-        transform: isMobile ? 'scale(1.1)' : 'scale(1)', // adjust slightly to avoid black borders
+        objectFit: 'cover',
         position: 'absolute',
-        top: 0,
+        top: isMobile ? '-520px' : '-420px', // 🔧 Adjusted offset for half-Earth visibility
         left: 0,
         zIndex: -20,
-        backgroundColor: 'black', // fallback if video doesn’t fill
+        transform: isMobile ? 'scale(1.2)' : 'scale(1)', // 🔧 Smooth mobile scaling
+        backgroundColor: 'black'
       }}
     >
       <source src={process.env.NEXT_PUBLIC_VIDEO_MP4 || "/videos/earth.mp4"} type="video/mp4" />
@@ -84,8 +84,8 @@ const VideoBackground = () => {
 
 export const Hero = () => {
   return (
-    <div className="relative flex flex-col h-screen w-full">
-      <Suspense fallback={<div className="absolute inset-0 bg-black -z-20" />}>
+    <div className="relative flex flex-col h-full w-full">
+      <Suspense fallback={<div className="absolute top-[-420px] left-0 w-full h-full bg-black -z-20" />}>
         <VideoBackground />
       </Suspense>
       <HeroContent />
