@@ -9,7 +9,6 @@ const VideoBackground = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Check if device is mobile
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
@@ -20,7 +19,6 @@ const VideoBackground = () => {
     if (videoRef.current) {
       videoRef.current.playbackRate = 0.6;
 
-      // Improved mobile autoplay handling
       const playVideo = async () => {
         try {
           await videoRef.current?.play();
@@ -32,7 +30,6 @@ const VideoBackground = () => {
         }
       };
 
-      // Add event listeners for better mobile support
       const handleVisibilityChange = () => {
         if (document.visibilityState === 'visible') {
           playVideo();
@@ -64,17 +61,18 @@ const VideoBackground = () => {
       loop
       playsInline
       preload="auto"
-      className={`rotate-180 absolute left-0 w-full h-full object-cover -z-20 ${isMobile ? 'mobile-video' : ''}`}
+      className={`rotate-180 absolute left-0 top-0 w-full h-full -z-20`}
       poster={process.env.NEXT_PUBLIC_VIDEO_POSTER || "/videos/earth-poster.jpg"}
       style={{
         width: '100%',
         height: '100%',
-        objectFit: 'cover',
+        objectFit: 'contain', // <--- KEY CHANGE: preserve full video frame
+        transform: isMobile ? 'scale(1.1)' : 'scale(1)', // adjust slightly to avoid black borders
         position: 'absolute',
         top: 0,
         left: 0,
         zIndex: -20,
-        transform: isMobile ? 'scale(1.3)' : 'none'
+        backgroundColor: 'black', // fallback if video doesn’t fill
       }}
     >
       <source src={process.env.NEXT_PUBLIC_VIDEO_MP4 || "/videos/earth.mp4"} type="video/mp4" />
@@ -86,7 +84,7 @@ const VideoBackground = () => {
 
 export const Hero = () => {
   return (
-    <div className="relative flex flex-col h-full w-full">
+    <div className="relative flex flex-col h-screen w-full">
       <Suspense fallback={<div className="absolute inset-0 bg-black -z-20" />}>
         <VideoBackground />
       </Suspense>
