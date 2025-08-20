@@ -9,7 +9,6 @@ const VideoBackground = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Check if device is mobile
     const checkMobile = () => {
       setIsMobile(window.innerWidth <= 768);
     };
@@ -20,7 +19,6 @@ const VideoBackground = () => {
     if (videoRef.current) {
       videoRef.current.playbackRate = 0.6;
 
-      // Improved mobile autoplay handling
       const playVideo = async () => {
         try {
           await videoRef.current?.play();
@@ -57,6 +55,7 @@ const VideoBackground = () => {
 
   return (
     <div className="absolute inset-0 flex justify-center items-center -z-20">
+      {/* Video */}
       <video
         ref={videoRef}
         autoPlay
@@ -67,7 +66,7 @@ const VideoBackground = () => {
         className="object-cover rounded-2xl shadow-xl"
         poster={process.env.NEXT_PUBLIC_VIDEO_POSTER || "/videos/earth-poster.jpg"}
         style={{
-          width: isMobile ? "80%" : "60%", // reduce video width
+          width: isMobile ? "80%" : "60%",
           height: "auto",
         }}
       >
@@ -81,6 +80,16 @@ const VideoBackground = () => {
         />
         Your browser does not support the video tag.
       </video>
+
+      {/* Dark overlay */}
+      <div
+        className="absolute rounded-2xl"
+        style={{
+          width: isMobile ? "80%" : "60%",
+          height: "100%",
+          backgroundColor: "rgba(0,0,0,0.5)", // 0.5 = 50% darkness
+        }}
+      />
     </div>
   );
 };
