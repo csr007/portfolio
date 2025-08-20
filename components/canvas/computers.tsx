@@ -1,110 +1,168 @@
+// Author: //sathwikreddychelemela
+import { OrbitControls, Preload, useGLTF } from "@react-three/drei";
+import { Canvas, useThree } from "@react-three/fiber";
+import { Suspense, useEffect, useState, useRef } from "react";
+import * as THREE from "three";
+import CanvasLoader from "@/components/main/loader";
+import { Html } from "@react-three/drei";
 import { motion } from "framer-motion";
-import { styles } from "@/styles";
-import ComputersCanvas from "@/components/canvas/computers";
-import { HeroContent } from "@/components/sub/hero-content";
-import { Suspense, useEffect, useRef, useState } from "react";
 
-const VideoBackground = () => {
-  const videoRef = useRef<HTMLVideoElement>(null);
+const Computers = ({ 
+  isMobile,
+  setCurrentView,
+  setHasSeenMessage,
+  initialRotation,
+  setInitialRotation
+}: { 
+  isMobile: boolean;
+  setCurrentView: (view: 'front' | null) => void;
+  setHasSeenMessage: (seen: boolean) => void;
+  initialRotation: number | null;
+  setInitialRotation: (rotation: number | null) => void;
+}) => {
+  const computer = useGLTF("./realistic_moon/scene.gltf");
+  const controlsRef = useRef<any>(null);
+  const lastRotationRef = useRef<number | null>(null);
+  const rotationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const moonFacts = {
+    front: {
+      title: "Welcome to My Portfolio",
+      description: "Thanks for exploring! Scroll down to discover my projects and skills."
+    }
+  };
+
+  return (
+    <mesh>
+      <hemisphereLight intensity={1} groundColor="black" />
+      <pointLight intensity={3} position={[10, 10, 10]} />
+      <spotLight
+        position={[-20, 50, 10]}
+        angle={0.12}
+        penumbra={1}
+        intensity={4}
+        castShadow
+        shadow-mapSize={1024}
+      />
+      <directionalLight position={[10, 20, 10]} intensity={3} color={new THREE.Color(0xffffff)} castShadow />
+      <primitive
+        object={computer.scene}
+        scale={isMobile ? 50 : 70}
+        position={isMobile ? [0, 0, 0] : [0, -10, 0]}
+        rotation={[-0.01, -0.2, -0.1]}
+      />
+      <OrbitControls 
+        ref={controlsRef}
+        enableZoom={false} 
+        maxPolarAngle={Math.PI / 2} 
+        minPolarAngle={Math.PI / 2}
+        onChange={(e) => {
+          if (!e) return;
+          const currentRotation = e.target.getAzimuthalAngle();
+          
+          // Set initial rotation if not set
+          if (initialRotation === null) {
+            setInitialRotation(currentRotation);
+            return;
+          }
+
+          // Calculate rotation difference from initial position
+          const rotationDiff = currentRotation - initialRotation;
+          
+          // Show message in the first half of rotation (0 to π)
+          if (rotationDiff > 0 && rotationDiff < Math.PI) {
+            setCurrentView('front');
+            setHasSeenMessage(true);
+          } else {
+            setCurrentView(null);
+          }
+        }}
+      />
+    </mesh>
+  );
+};
+
+const ComputersCanvas = ({ setMoonMessage }: { setMoonMessage: (message: { title: string; description: string } | null) => void }) => {
   const [isMobile, setIsMobile] = useState(false);
+  const [currentView, setCurrentView] = useState<'front' | null>(null);
+  const [initialRotation, setInitialRotation] = useState<number | null>(null);
+  const [hasSeenMessage, setHasSeenMessage] = useState(false);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 768);
+    const mediaQuery = window.matchMedia("(max-width: 500px)");
+    setIsMobile(mediaQuery.matches);
+
+    const handleMediaQueryChange = (event: MediaQueryListEvent) => {
+      setIsMobile(event.matches);
     };
 
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-
-    if (videoRef.current) {
-      videoRef.current.playbackRate = 0.6;
-
-      const playVideo = async () => {
-        try {
-          await videoRef.current?.play();
-        } catch (error) {
-          console.log("Autoplay failed, showing poster image");
-          if (videoRef.current) {
-            videoRef.current.load();
-          }
-        }
-      };
-
-      const handleVisibilityChange = () => {
-        if (document.visibilityState === "visible") {
-          playVideo();
-        }
-      };
-
-      const handleTouchStart = () => {
-        playVideo();
-      };
-
-      document.addEventListener("visibilitychange", handleVisibilityChange);
-      document.addEventListener("touchstart", handleTouchStart, { once: true });
-
-      playVideo();
-
-      return () => {
-        document.removeEventListener("visibilitychange", handleVisibilityChange);
-        document.removeEventListener("touchstart", handleTouchStart);
-        window.removeEventListener("resize", checkMobile);
-      };
-    }
+    mediaQuery.addEventListener("change", handleMediaQueryChange);
+    return () => {
+      mediaQuery.removeEventListener("change", handleMediaQueryChange);
+    };
   }, []);
 
-  return (
-    <div className="absolute inset-0 flex justify-center items-center -z-20">
-      {/* Circle wrapper */}
-      <div
-        className="overflow-hidden rounded-full shadow-xl relative"
-        style={{
-          width: isMobile ? "250px" : "400px",
-          height: isMobile ? "250px" : "400px",
-        }}
-      >
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          // 🔥 scaled down to 0.9
-          className="w-full h-full object-cover object-top scale-[0.9]"
-          poster={process.env.NEXT_PUBLIC_VIDEO_POSTER || "/videos/earth-poster.jpg"}
-        >
-          <source
-            src={process.env.NEXT_PUBLIC_VIDEO_MP4 || "/videos/earth.mp4"}
-            type="video/mp4"
-          />
-          <source
-            src={process.env.NEXT_PUBLIC_VIDEO_WEBM || "/videos/earth.webm"}
-            type="video/webm"
-          />
-          Your browser does not support the video tag.
-        </video>
+  const moonFacts = {
+    front: {
+      title: "Welcome to My Portfolio",
+      description: "Thanks for exploring! Scroll down to discover my work"
+    }
+  };
 
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/40" />
-      </div>
+  useEffect(() => {
+    if (currentView) {
+      setMoonMessage(moonFacts[currentView]);
+    } else {
+      setMoonMessage(null);
+    }
+  }, [currentView, setMoonMessage]);
+
+  return (
+    <div style={{ position: "relative", textAlign: "center" }}>
+      <Canvas
+        frameloop="demand"
+        shadows
+        camera={{ position: [isMobile ? 50 : 100, 20, 40], fov: isMobile ? 55 : 45 }}
+        gl={{ preserveDrawingBuffer: true, alpha: true }}
+      >
+        <Suspense fallback={<CanvasLoader />}>
+          <Computers 
+            isMobile={isMobile}
+            setCurrentView={setCurrentView}
+            setHasSeenMessage={setHasSeenMessage}
+            initialRotation={initialRotation}
+            setInitialRotation={setInitialRotation}
+          />
+        </Suspense>
+        <Preload all />
+      </Canvas>
+      {!currentView && !hasSeenMessage && (
+        <div className="absolute left-1/2 bottom-[-50px] transform -translate-x-1/2 z-[100]">
+          <motion.div 
+            className="text-4xl text-white"
+            animate={{
+              x: [-20, 20, -20],
+              opacity: [0.5, 1, 0.5],
+            }}
+            transition={{
+              x: {
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              },
+              opacity: {
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }
+            }}
+          >
+            ⟷
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };
 
-export const Hero = () => {
-  return (
-    <div className="relative flex flex-col h-full w-full">
-      <Suspense
-        fallback={
-          <div className="absolute inset-0 flex justify-center items-center -z-20">
-            <div className="w-[400px] h-[400px] bg-black rounded-full" />
-          </div>
-        }
-      >
-        <VideoBackground />
-      </Suspense>
-      <HeroContent />
-    </div>
-  );
-};
+export default ComputersCanvas;
