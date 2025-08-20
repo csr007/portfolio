@@ -1,10 +1,9 @@
 // Author: //sathwikreddychelemela
 import { OrbitControls, Preload, useGLTF } from "@react-three/drei";
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { Suspense, useEffect, useState, useRef } from "react";
 import * as THREE from "three";
 import CanvasLoader from "@/components/main/loader";
-import { Html } from "@react-three/drei";
 import { motion } from "framer-motion";
 
 const Computers = ({ 
@@ -22,15 +21,6 @@ const Computers = ({
 }) => {
   const computer = useGLTF("./realistic_moon/scene.gltf");
   const controlsRef = useRef<any>(null);
-  const lastRotationRef = useRef<number | null>(null);
-  const rotationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const moonFacts = {
-    front: {
-      title: "Welcome to My Portfolio",
-      description: "Thanks for exploring! Scroll down to discover my projects and skills."
-    }
-  };
 
   return (
     <mesh>
@@ -47,7 +37,7 @@ const Computers = ({
       <directionalLight position={[10, 20, 10]} intensity={3} color={new THREE.Color(0xffffff)} castShadow />
       <primitive
         object={computer.scene}
-        scale={isMobile ? 50 : 70}
+        scale={isMobile ? 45 : 63}   // reduced to 0.9x
         position={isMobile ? [0, 0, 0] : [0, -10, 0]}
         rotation={[-0.01, -0.2, -0.1]}
       />
@@ -60,16 +50,13 @@ const Computers = ({
           if (!e) return;
           const currentRotation = e.target.getAzimuthalAngle();
           
-          // Set initial rotation if not set
           if (initialRotation === null) {
             setInitialRotation(currentRotation);
             return;
           }
 
-          // Calculate rotation difference from initial position
           const rotationDiff = currentRotation - initialRotation;
           
-          // Show message in the first half of rotation (0 to π)
           if (rotationDiff > 0 && rotationDiff < Math.PI) {
             setCurrentView('front');
             setHasSeenMessage(true);
