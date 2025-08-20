@@ -55,7 +55,7 @@ const VideoBackground = () => {
 
   return (
     <div className="absolute inset-0 flex justify-center items-center -z-20">
-      {/* Wrapper to crop video in circle */}
+      {/* Circle wrapper */}
       <div
         className="overflow-hidden rounded-full shadow-xl relative"
         style={{
@@ -70,7 +70,8 @@ const VideoBackground = () => {
           loop
           playsInline
           preload="auto"
-          className="w-full h-full object-cover scale-[1.3]" // scaled up 1.3x
+          // 🔥 key changes: scale + object-top
+          className="w-full h-full object-cover object-top scale-[1.3]"
           poster={process.env.NEXT_PUBLIC_VIDEO_POSTER || "/videos/earth-poster.jpg"}
         >
           <source
@@ -84,7 +85,7 @@ const VideoBackground = () => {
           Your browser does not support the video tag.
         </video>
 
-        {/* Optional dark overlay */}
+        {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/40" />
       </div>
     </div>
