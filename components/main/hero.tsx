@@ -59,7 +59,7 @@ const VideoBackground = () => {
       <div
         className="overflow-hidden rounded-full shadow-xl relative"
         style={{
-          width: isMobile ? "250px" : "400px", // circle size
+          width: isMobile ? "250px" : "400px",
           height: isMobile ? "250px" : "400px",
         }}
       >
@@ -70,7 +70,7 @@ const VideoBackground = () => {
           loop
           playsInline
           preload="auto"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover scale-[1.3]" // scaled up 1.3x
           poster={process.env.NEXT_PUBLIC_VIDEO_POSTER || "/videos/earth-poster.jpg"}
         >
           <source
