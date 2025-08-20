@@ -55,41 +55,38 @@ const VideoBackground = () => {
 
   return (
     <div className="absolute inset-0 flex justify-center items-center -z-20">
-      {/* Video */}
-      <video
-        ref={videoRef}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-        className="object-cover rounded-2xl shadow-xl"
-        poster={process.env.NEXT_PUBLIC_VIDEO_POSTER || "/videos/earth-poster.jpg"}
+      {/* Wrapper to crop video in circle */}
+      <div
+        className="overflow-hidden rounded-full shadow-xl relative"
         style={{
-          width: isMobile ? "80%" : "60%",
-          height: "auto",
+          width: isMobile ? "250px" : "400px", // circle size
+          height: isMobile ? "250px" : "400px",
         }}
       >
-        <source
-          src={process.env.NEXT_PUBLIC_VIDEO_MP4 || "/videos/earth.mp4"}
-          type="video/mp4"
-        />
-        <source
-          src={process.env.NEXT_PUBLIC_VIDEO_WEBM || "/videos/earth.webm"}
-          type="video/webm"
-        />
-        Your browser does not support the video tag.
-      </video>
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="w-full h-full object-cover"
+          poster={process.env.NEXT_PUBLIC_VIDEO_POSTER || "/videos/earth-poster.jpg"}
+        >
+          <source
+            src={process.env.NEXT_PUBLIC_VIDEO_MP4 || "/videos/earth.mp4"}
+            type="video/mp4"
+          />
+          <source
+            src={process.env.NEXT_PUBLIC_VIDEO_WEBM || "/videos/earth.webm"}
+            type="video/webm"
+          />
+          Your browser does not support the video tag.
+        </video>
 
-      {/* Dark overlay */}
-      <div
-        className="absolute rounded-2xl"
-        style={{
-          width: isMobile ? "80%" : "60%",
-          height: "100%",
-          backgroundColor: "rgba(0,0,0,0.5)", // 0.5 = 50% darkness
-        }}
-      />
+        {/* Optional dark overlay */}
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
     </div>
   );
 };
@@ -100,7 +97,7 @@ export const Hero = () => {
       <Suspense
         fallback={
           <div className="absolute inset-0 flex justify-center items-center -z-20">
-            <div className="w-3/4 h-3/4 bg-black rounded-2xl" />
+            <div className="w-[400px] h-[400px] bg-black rounded-full" />
           </div>
         }
       >
